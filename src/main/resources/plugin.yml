@@ -15,6 +15,14 @@ commands:
     usage: /kasaanahtarver <adet> [oyuncu]
     permission: rotatekasa.admin
 
+  spawn:
+    description: Spawn alanina isinlanirsin
+    usage: /spawn
+  setspawn:
+    description: Spawn noktasini bulundugun yer yapar
+    usage: /setspawn
+    permission: rotatekasa.admin
+
 permissions:
   rotatekasa.admin:
     description: Kasa koyma, kaldirma, duzenleme ve anahtar verme

@@ -21,6 +21,17 @@ public final class KasaPlugin extends JavaPlugin {
             }
         }
 
+        SpawnModule spawn = new SpawnModule(this);
+        spawn.load();
+        for (String name : new String[]{"spawn", "setspawn"}) {
+            PluginCommand pc = getCommand(name);
+            if (pc != null) {
+                pc.setExecutor(spawn);
+                pc.setTabCompleter(spawn);
+            }
+        }
+        getServer().getPluginManager().registerEvents(spawn, this);
+
         getServer().getPluginManager().registerEvents(new CrateListener(crates), this);
         getLogger().info("RotateKasa aktif. Kayitli kasa sayisi: " + crates.count());
     }

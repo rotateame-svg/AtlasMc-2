@@ -5,6 +5,8 @@ Paper 1.21.x icin anahtarla acilan, animasyonlu kasa eklentisi.
 ## Komutlar (yetki: `rotatekasa.admin`, varsayilan OP)
 - `/kasakoy` : Baktigin yere shulker kasa koyar, envanterindeki itemleri icine doldurur. Kasadaki itemler odul havuzudur.
 - `/kasaanahtarver <adet> [oyuncu]` : Kasa anahtari verir.
+- `/setspawn` : Spawn noktasini bulundugun yer yapar (admin).
+- `/spawn` : Herkes spawn alanina isinlanir. Her giriste ve yatagi olmayip olunce de orada dogarsin.
 
 ## Kullanim
 - Kasaya anahtarla sag tikla -> animasyon -> rastgele odul.
