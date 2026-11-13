@@ -1,0 +1,21 @@
+name: RotateKasa
+version: '${project.version}'
+main: com.rotatesmp.kasa.KasaPlugin
+api-version: '1.21'
+author: RotateSMP
+description: Anahtarla acilan, animasyonlu kasa (crate) sistemi
+
+commands:
+  kasakoy:
+    description: Baktigin yere kasa (shulker) koyar ve envanterini icine doldurur
+    usage: /kasakoy
+    permission: rotatekasa.admin
+  kasaanahtarver:
+    description: Kasa anahtari verir
+    usage: /kasaanahtarver <adet> [oyuncu]
+    permission: rotatekasa.admin
+
+permissions:
+  rotatekasa.admin:
+    description: Kasa koyma, kaldirma, duzenleme ve anahtar verme
+    default: op
