@@ -22,6 +22,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.Location;
 
@@ -36,15 +37,31 @@ public final class CrateListener implements Listener {
         this.crates = crates;
     }
 
-    // ---------- kasayi acma ----------
+    // ---------- kasayi acma / onizleme ----------
 
     @EventHandler
     public void onInteract(PlayerInteractEvent e) {
-        if (e.getAction() != Action.RIGHT_CLICK_BLOCK) {
+        Action action = e.getAction();
+        if (action != Action.RIGHT_CLICK_BLOCK && action != Action.LEFT_CLICK_BLOCK) {
             return;
         }
         Block block = e.getClickedBlock();
         if (block == null || !crates.isCrate(block)) {
+            return;
+        }
+
+        Player p = e.getPlayer();
+        boolean admin = p.hasPermission(CrateManager.ADMIN_PERM);
+
+        // Sol tik -> onizleme (admin shift + sol tik kirmaya birakilir)
+        if (action == Action.LEFT_CLICK_BLOCK) {
+            if (p.isSneaking() && admin) {
+                return;
+            }
+            e.setCancelled(true);
+            if (e.getHand() == EquipmentSlot.HAND && block.getState() instanceof ShulkerBox box) {
+                openPreview(p, box);
+            }
             return;
         }
 
@@ -56,10 +73,8 @@ public final class CrateListener implements Listener {
             return;
         }
 
-        Player p = e.getPlayer();
-
         // Admin: shift + sag tik -> ici duzenle
-        if (p.isSneaking() && p.hasPermission(CrateManager.ADMIN_PERM)) {
+        if (p.isSneaking() && admin) {
             p.openInventory(box.getInventory());
             return;
         }
@@ -68,6 +83,7 @@ public final class CrateListener implements Listener {
         if (!crates.isKey(hand)) {
             CrateManager.msg(p, "<red>Bu kasayı açmak için <gold>Kasa Anahtarı <red>gerekli!");
             p.playSound(p.getLocation(), Sound.ENTITY_VILLAGER_NO, 1f, 1f);
+            openPreview(p, box);
             return;
         }
         if (crates.isRolling(p)) {
@@ -89,6 +105,14 @@ public final class CrateListener implements Listener {
         p.getInventory().setItemInMainHand(hand.getAmount() <= 0 ? null : hand);
 
         crates.startRoll(p, pool);
+    }
+
+    private void openPreview(Player p, ShulkerBox box) {
+        if (crates.isRolling(p)) {
+            return;
+        }
+        p.openInventory(new CratePreview(box.getInventory().getContents()).getInventory());
+        p.playSound(p.getLocation(), Sound.BLOCK_SHULKER_BOX_OPEN, 0.6f, 1f);
     }
 
     // ---------- kasa korumasi ----------
@@ -158,16 +182,20 @@ public final class CrateListener implements Listener {
 
     // ---------- animasyon GUI korumasi ----------
 
+    private boolean isLockedGui(InventoryHolder holder) {
+        return holder instanceof CrateRoll || holder instanceof CratePreview;
+    }
+
     @EventHandler
     public void onClick(InventoryClickEvent e) {
-        if (e.getView().getTopInventory().getHolder(false) instanceof CrateRoll) {
+        if (isLockedGui(e.getView().getTopInventory().getHolder(false))) {
             e.setCancelled(true);
         }
     }
 
     @EventHandler
     public void onDrag(InventoryDragEvent e) {
-        if (e.getView().getTopInventory().getHolder(false) instanceof CrateRoll) {
+        if (isLockedGui(e.getView().getTopInventory().getHolder(false))) {
             e.setCancelled(true);
         }
     }

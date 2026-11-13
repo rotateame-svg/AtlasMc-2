@@ -9,7 +9,9 @@ Paper 1.21.x icin anahtarla acilan, animasyonlu kasa eklentisi.
 - `/spawn` : Herkes spawn alanina isinlanir. Her giriste ve yatagi olmayip olunce de orada dogarsin.
 
 ## Kullanim
-- Kasaya anahtarla sag tikla -> animasyon -> rastgele odul.
+- Kasaya SOL tik -> icindeki oduller onizlenir (salt okunur).
+- Kasaya anahtarla SAG tik -> animasyon -> rastgele odul. Anahtarsiz sag tik onizlemeyi acar.
+- Kasanin ustunde 'Atlas Mc Kasalar' yazisi (TextDisplay) durur.
 - Kasadaki itemler hic bitmez (odulun kopyasi verilir). Ayni itemi birden fazla slota koyarsan sansi artar.
 - Admin: Shift + sag tik -> kasanin icini acip odulleri duzenle.
 - Admin: Shift + kir -> kasayi kaldir.

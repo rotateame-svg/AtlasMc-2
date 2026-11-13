@@ -33,6 +33,7 @@ public final class KasaPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(spawn, this);
 
         getServer().getPluginManager().registerEvents(new CrateListener(crates), this);
+        getServer().getScheduler().runTask(this, crates::ensureAllHolograms);
         getLogger().info("RotateKasa aktif. Kayitli kasa sayisi: " + crates.count());
     }
 
