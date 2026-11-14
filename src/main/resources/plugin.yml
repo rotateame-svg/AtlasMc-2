@@ -38,6 +38,10 @@ commands:
     usage: /rtpnpcsil
     permission: rotatekasa.admin
 
+  evler:
+    description: 5 slotluk ev (home) menusunu acar
+    usage: /evler
+
 permissions:
   rotatekasa.admin:
     description: Kasa koyma, kaldirma, duzenleme ve anahtar verme

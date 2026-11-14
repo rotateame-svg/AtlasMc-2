@@ -11,6 +11,7 @@ Paper 1.21.x icin anahtarla acilan, animasyonlu kasa eklentisi.
 - `/artp` : Menu acar; Dunya, Nether veya End secip rastgele isinlanirsin. (Mesafe ve bekleme config.yml'den ayarlanir.)
 - `/rtpnpcolustur` : Baktigin yere RTP NPC'si koyar, sag tiklayinca /artp menusu acilir (admin).
 - `/rtpnpcsil` : Baktigin RTP NPC'sini siler (admin).
+- `/evler` : 5 slotluk ev menusu. Bos slota tikla = ev kur, sol tik = isinlan, sag tik = evi tasi, shift + sag tik = sil.
 
 ## Kullanim
 - Kasaya SOL tik -> icindeki oduller onizlenir (salt okunur).

@@ -42,6 +42,14 @@ public final class KasaPlugin extends JavaPlugin {
         }
         getServer().getPluginManager().registerEvents(rtp, this);
 
+        HomeModule homes = new HomeModule(this);
+        homes.load();
+        PluginCommand evler = getCommand("evler");
+        if (evler != null) {
+            evler.setExecutor(homes);
+        }
+        getServer().getPluginManager().registerEvents(homes, this);
+
         getServer().getPluginManager().registerEvents(new CrateListener(crates), this);
         getServer().getScheduler().runTask(this, crates::ensureAllHolograms);
         getLogger().info("RotateKasa aktif. Kayitli kasa sayisi: " + crates.count());

@@ -3,6 +3,7 @@ package com.rotatesmp.kasa;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Bukkit;
+import org.bukkit.Color;
 import org.bukkit.HeightMap;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -15,6 +16,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
@@ -25,12 +27,15 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
+import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.RayTraceResult;
 
@@ -94,6 +99,9 @@ public final class RtpModule implements CommandExecutor, Listener {
     }
 
     public void openMenu(Player p) {
+        if (p.getOpenInventory().getTopInventory().getHolder(false) instanceof MenuHolder) {
+            return;
+        }
         MenuHolder holder = new MenuHolder();
         Inventory inv = Bukkit.createInventory(holder, 27, CrateManager.MM.deserialize("<gold><bold>Rastgele Işınlan"));
         holder.inventory = inv;
@@ -182,7 +190,49 @@ public final class RtpModule implements CommandExecutor, Listener {
     // ---------- NPC ----------
 
     private boolean isNpc(Entity e) {
-        return e instanceof Villager && e.getPersistentDataContainer().has(npcTag, PersistentDataType.BYTE);
+        return (e instanceof Villager || e instanceof ArmorStand)
+                && e.getPersistentDataContainer().has(npcTag, PersistentDataType.BYTE);
+    }
+
+    private static final String NPC_NAME = "<aqua><bold>Rastgele Işınlan <gray>(Tıkla)";
+
+    private Entity spawnVillagerNpc(Location loc) {
+        return loc.getWorld().spawn(loc, Villager.class, v -> {
+            v.customName(CrateManager.MM.deserialize(NPC_NAME));
+            v.setCustomNameVisible(true);
+            v.setAI(false);
+            v.setSilent(true);
+            v.setGravity(false);
+            v.setCollidable(false);
+            v.setPersistent(true);
+            v.setRemoveWhenFarAway(false);
+            v.getPersistentDataContainer().set(npcTag, PersistentDataType.BYTE, (byte) 1);
+        });
+    }
+
+    private ItemStack dyed(Material material, Color color) {
+        ItemStack item = new ItemStack(material);
+        LeatherArmorMeta meta = (LeatherArmorMeta) item.getItemMeta();
+        meta.setColor(color);
+        item.setItemMeta(meta);
+        return item;
+    }
+
+    private Entity spawnStandNpc(Location loc) {
+        return loc.getWorld().spawn(loc, ArmorStand.class, a -> {
+            a.customName(CrateManager.MM.deserialize(NPC_NAME));
+            a.setCustomNameVisible(true);
+            a.setArms(true);
+            a.setBasePlate(false);
+            a.setGravity(false);
+            a.setSilent(true);
+            a.setPersistent(true);
+            a.getEquipment().setHelmet(new ItemStack(Material.PLAYER_HEAD));
+            a.getEquipment().setChestplate(dyed(Material.LEATHER_CHESTPLATE, Color.AQUA));
+            a.getEquipment().setLeggings(dyed(Material.LEATHER_LEGGINGS, Color.AQUA));
+            a.getEquipment().setBoots(dyed(Material.LEATHER_BOOTS, Color.AQUA));
+            a.getPersistentDataContainer().set(npcTag, PersistentDataType.BYTE, (byte) 1);
+        });
     }
 
     private void createNpc(Player p) {
@@ -197,19 +247,32 @@ public final class RtpModule implements CommandExecutor, Listener {
         loc.setDirection(p.getLocation().toVector().subtract(loc.toVector()));
         loc.setPitch(0f);
 
-        loc.getWorld().spawn(loc, Villager.class, v -> {
-            v.customName(CrateManager.MM.deserialize("<aqua><bold>Rastgele Işınlan <gray>(Tıkla)"));
-            v.setCustomNameVisible(true);
-            v.setAI(false);
-            v.setSilent(true);
-            v.setGravity(false);
-            v.setCollidable(false);
-            v.setPersistent(true);
-            v.setRemoveWhenFarAway(false);
-            v.getPersistentDataContainer().set(npcTag, PersistentDataType.BYTE, (byte) 1);
-        });
+        Entity npc = null;
+        String kind = "köylü";
+        try {
+            npc = spawnVillagerNpc(loc);
+        } catch (Exception ex) {
+            plugin.getLogger().warning("Koylu NPC olusturulamadi: " + ex.getMessage());
+        }
+        if (npc == null || !npc.isValid()) {
+            if (npc != null) {
+                npc.remove();
+            }
+            kind = "zırh askısı";
+            try {
+                npc = spawnStandNpc(loc);
+            } catch (Exception ex) {
+                plugin.getLogger().warning("Zirh askisi NPC olusturulamadi: " + ex.getMessage());
+                npc = null;
+            }
+        }
 
-        CrateManager.msg(p, "<green>RTP NPC'si oluşturuldu! <gray>Kaldırmak için ona bakıp <white>/rtpnpcsil <gray>yaz.");
+        if (npc == null || !npc.isValid()) {
+            CrateManager.msg(p, "<red>NPC oluşturulamadı! <gray>Büyük ihtimalle başka bir eklenti ya da sunucu ayarı engelliyor. Konsoldaki uyarıya bak.");
+            return;
+        }
+        CrateManager.msg(p, "<green>RTP NPC'si oluşturuldu <gray>(<k>)<green>! <gray>Kaldırmak için ona bakıp <white>/rtpnpcsil <gray>yaz.",
+                Placeholder.unparsed("k", kind));
     }
 
     private void removeNpc(Player p) {
@@ -233,6 +296,25 @@ public final class RtpModule implements CommandExecutor, Listener {
             return;
         }
         openMenu(e.getPlayer());
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onInteractAtNpc(PlayerInteractAtEntityEvent e) {
+        if (!isNpc(e.getRightClicked())) {
+            return;
+        }
+        e.setCancelled(true);
+        if (e.getHand() != EquipmentSlot.HAND) {
+            return;
+        }
+        openMenu(e.getPlayer());
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onStandManipulate(PlayerArmorStandManipulateEvent e) {
+        if (isNpc(e.getRightClicked())) {
+            e.setCancelled(true);
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGH)
