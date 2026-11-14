@@ -23,6 +23,21 @@ commands:
     usage: /setspawn
     permission: rotatekasa.admin
 
+  rtp:
+    description: Rastgele bir yere isinlanirsin
+    usage: /rtp
+  artp:
+    description: Dunya, Nether ve End secimli RTP menusunu acar
+    usage: /artp
+  rtpnpcolustur:
+    description: Baktigin yere RTP menusu acan NPC olusturur
+    usage: /rtpnpcolustur
+    permission: rotatekasa.admin
+  rtpnpcsil:
+    description: Baktigin RTP NPC'sini siler
+    usage: /rtpnpcsil
+    permission: rotatekasa.admin
+
 permissions:
   rotatekasa.admin:
     description: Kasa koyma, kaldirma, duzenleme ve anahtar verme

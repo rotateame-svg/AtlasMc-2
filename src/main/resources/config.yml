@@ -1,0 +1,18 @@
+# Rastgele isinlanma (RTP) ayarlari
+rtp:
+  # Iki isinlanma arasi bekleme (saniye). Adminler beklemez.
+  cooldown-seconds: 10
+  # Guvenli yer bulmak icin kac deneme yapilsin
+  max-attempts: 20
+  # Dunya: spawn noktasindan en az / en fazla kac blok uzaga
+  overworld:
+    min-distance: 300
+    max-distance: 5000
+  # Nether: 0,0 merkezli
+  nether:
+    min-distance: 100
+    max-distance: 1500
+  # End: 0,0 merkezli (ana ada kucuktur, buyuk yapma)
+  end:
+    min-distance: 10
+    max-distance: 45

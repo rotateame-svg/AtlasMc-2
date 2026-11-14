@@ -9,6 +9,7 @@ public final class KasaPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        saveDefaultConfig();
         crates = new CrateManager(this);
         crates.load();
 
@@ -31,6 +32,15 @@ public final class KasaPlugin extends JavaPlugin {
             }
         }
         getServer().getPluginManager().registerEvents(spawn, this);
+
+        RtpModule rtp = new RtpModule(this);
+        for (String name : new String[]{"rtp", "artp", "rtpnpcolustur", "rtpnpcsil"}) {
+            PluginCommand pc = getCommand(name);
+            if (pc != null) {
+                pc.setExecutor(rtp);
+            }
+        }
+        getServer().getPluginManager().registerEvents(rtp, this);
 
         getServer().getPluginManager().registerEvents(new CrateListener(crates), this);
         getServer().getScheduler().runTask(this, crates::ensureAllHolograms);

@@ -7,6 +7,10 @@ Paper 1.21.x icin anahtarla acilan, animasyonlu kasa eklentisi.
 - `/kasaanahtarver <adet> [oyuncu]` : Kasa anahtari verir.
 - `/setspawn` : Spawn noktasini bulundugun yer yapar (admin).
 - `/spawn` : Herkes spawn alanina isinlanir. Her giriste ve yatagi olmayip olunce de orada dogarsin.
+- `/rtp` : Dunyada rastgele guvenli bir yere isinlanir.
+- `/artp` : Menu acar; Dunya, Nether veya End secip rastgele isinlanirsin. (Mesafe ve bekleme config.yml'den ayarlanir.)
+- `/rtpnpcolustur` : Baktigin yere RTP NPC'si koyar, sag tiklayinca /artp menusu acilir (admin).
+- `/rtpnpcsil` : Baktigin RTP NPC'sini siler (admin).
 
 ## Kullanim
 - Kasaya SOL tik -> icindeki oduller onizlenir (salt okunur).
