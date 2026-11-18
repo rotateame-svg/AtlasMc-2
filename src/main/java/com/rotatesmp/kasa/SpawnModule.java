@@ -10,7 +10,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
 import java.io.File;
@@ -19,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-/** /spawn, /setspawn, ilk giriste ve yatak yoksa olunce spawn'a isinlama. */
+/** /spawn, /setspawn ve olunce her zaman spawn'da dogma. */
 public final class SpawnModule implements CommandExecutor, TabCompleter, Listener {
 
     private final KasaPlugin plugin;
@@ -117,15 +116,8 @@ public final class SpawnModule implements CommandExecutor, TabCompleter, Listene
     }
 
     @EventHandler
-    public void onJoin(PlayerJoinEvent e) {
-        if (spawn != null && spawn.getWorld() != null) {
-            e.getPlayer().teleport(spawn);
-        }
-    }
-
-    @EventHandler
     public void onRespawn(PlayerRespawnEvent e) {
-        if (spawn != null && spawn.getWorld() != null && !e.isBedSpawn() && !e.isAnchorSpawn()) {
+        if (spawn != null && spawn.getWorld() != null) {
             e.setRespawnLocation(spawn);
         }
     }

@@ -1,39 +1,48 @@
-name: AtlasMC
-main: net.atlasmc.AtlasMC
-version: 1.0.0
+name: RotateKasa
+version: '${project.version}'
+main: com.rotatesmp.kasa.KasaPlugin
 api-version: '1.21'
-author: AtlasMC
-depend: [Vault]
-softdepend: [LuckPerms, Essentials]
+author: RotateSMP
+description: Anahtarla acilan, animasyonlu kasa (crate) sistemi
+
 commands:
-  shop:
-    description: Market menüsünü açar
-  afk:
-    description: AFK odasına ışınlanır / geri döner
-  kristal:
-    description: Kristal bakiyeni gösterir ve marketi açar
-  kristalmarket:
-    description: Kristal marketini açar
-  ah:
-    description: Açık artırma / pazar
-  order:
-    description: Alım siparişleri
-  '3x3kazmaver':
-    description: Süreli 3x3 Kristal Kazma verir (sadece OP)
-    usage: /3x3kazmaver <gün> [oyuncu]
+  kasakoy:
+    description: Baktigin yere kasa (shulker) koyar ve envanterini icine doldurur
+    usage: /kasakoy
+    permission: rotatekasa.admin
+  kasaanahtarver:
+    description: Kasa anahtari verir
+    usage: /kasaanahtarver <adet> [oyuncu]
+    permission: rotatekasa.admin
+
+  spawn:
+    description: Spawn alanina isinlanirsin
+    usage: /spawn
+  setspawn:
+    description: Spawn noktasini bulundugun yer yapar
+    usage: /setspawn
+    permission: rotatekasa.admin
+
   rtp:
-    description: Işınlanma menüsünü açar
+    description: Rastgele bir yere isinlanirsin
+    usage: /rtp
+  artp:
+    description: Dunya, Nether ve End secimli RTP menusunu acar
+    usage: /artp
   rtpnpcolustur:
-    description: Bulunduğun yere RTP NPC'si oluşturur (silmek için /rtpnpcolustur sil)
-  sat:
-    description: Eşyaları menüye koyup satarsın
+    description: Baktigin yere RTP menusu acan NPC olusturur
+    usage: /rtpnpcolustur
+    permission: rotatekasa.admin
+  rtpnpcsil:
+    description: Baktigin RTP NPC'sini siler
+    usage: /rtpnpcsil
+    permission: rotatekasa.admin
+
+  evler:
+    description: 5 slotluk ev (home) menusunu acar
+    usage: /evler
+
 permissions:
-  atlasmc.admin:
-    description: Yönetici komutları
+  rotatekasa.admin:
+    description: Kasa koyma, kaldirma, duzenleme ve anahtar verme
     default: op
-  atlasmc.anticheat.alerts:
-    description: AntiCheat uyarılarını görür
-    default: op
-  atlasmc.anticheat.bypass:
-    description: AntiCheat kontrollerine takılmaz
-    default: false

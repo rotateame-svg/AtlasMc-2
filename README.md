@@ -6,7 +6,7 @@ Paper 1.21.x icin anahtarla acilan, animasyonlu kasa eklentisi.
 - `/kasakoy` : Baktigin yere shulker kasa koyar, envanterindeki itemleri icine doldurur. Kasadaki itemler odul havuzudur.
 - `/kasaanahtarver <adet> [oyuncu]` : Kasa anahtari verir.
 - `/setspawn` : Spawn noktasini bulundugun yer yapar (admin).
-- `/spawn` : Herkes spawn alanina isinlanir. Her giriste ve yatagi olmayip olunce de orada dogarsin.
+- `/spawn` : Herkes spawn alanina isinlanir. Olen herkes (yatagi olsa bile) spawn'da dogar.
 - `/rtp` : Dunyada rastgele guvenli bir yere isinlanir.
 - `/artp` : Menu acar; Dunya, Nether veya End secip rastgele isinlanirsin. (Mesafe ve bekleme config.yml'den ayarlanir.)
 - `/rtpnpcolustur` : Baktigin yere RTP NPC'si koyar, sag tiklayinca /artp menusu acilir (admin).
